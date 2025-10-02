@@ -1,65 +1,85 @@
-IP TRACER HELPS FIND IP ADDRESS , WHETHER ITS ALIVE OR NOT AND ALSO HELPS FIND OPEN COMMON TCP PORTS
-
-
 # 🛰️ IP Tracer
 
 ## 📘 Overview
-**IP Tracer** is a Python-based tool that uses the built-in **socket** module to:
-- Find the **IP address** of any given domain or hostname  
-- Check **whether the target is alive (reachable)**  
-- Detect **open common TCP ports** for basic network analysis  
+**IP Tracer** is a simple Python tool that uses the built-in **socket**, **subprocess**, and **platform** modules to:
+- Check if an **IP address is alive** using system-level ping commands  
+- **Scan common TCP ports** to identify open network services  
+- Provide quick insights into host reachability and service availability  
 
-> ⚡ This project is ideal for students, ethical hackers, and cybersecurity learners.
+This project is perfect for **beginners**, **cybersecurity learners**, and **network enthusiasts** who want to understand how basic network scanning works.
 
 ---
 
 ## ⚙️ Features
 
-### 🔍 1. IP Address Finder
-- Resolves hostnames to IP addresses using `socket.gethostbyname()`
-- Helps identify the exact IP of a domain before performing scans  
+### 🌐 1. Host Availability Check
+- Uses the `ping` command to verify if a given IP address is alive.  
+- Automatically detects the user’s OS (Windows/Linux/Mac) and uses the correct ping parameter (`-n` or `-c`).  
+- Prints a clear message whether the host is **alive** or **not reachable**.
 
-### 🌐 2. Host Availability Checker
-- Checks if the given host is alive by attempting TCP connections  
-- Uses port probing to verify reachability  
+### 🔍 2. Common TCP Port Scanner
+- Scans a predefined set of **well-known ports**, including:
+  - 21 (FTP)
+  - 22 (SSH)
+  - 23 (Telnet)
+  - 25 (SMTP)
+  - 53 (DNS)
+  - 80 (HTTP)
+  - 110 (POP3)
+  - 143 (IMAP)
+  - 443 (HTTPS)
+  - 3306 (MySQL)
+  - 3389 (RDP)
+  - 8080 (HTTP-Alt)  
 
-### 🔓 3. Common TCP Port Scanner
-- Scans a predefined list of **common ports** (e.g., 21, 22, 25, 53, 80, 443, etc.)  
-- Reports which ports are open using `socket.connect_ex()`  
+- Uses the **socket** module’s `connect_ex()` method to test if each port is open.  
+- Displays ✅ **OPEN** or ❌ **CLOSED** for every port scanned.
 
 ---
 
-## 🧠 About the `socket` Module
-The `socket` module is a **Python standard library** that enables low-level network communication.
+## 🧠 Module Information
 
-### 📘 Key Functions Used
-| Function | Description |
-|-----------|--------------|
-| `socket.socket()` | Creates a new socket object |
-| `socket.gethostbyname(host)` | Returns the IP address of the given hostname |
-| `socket.connect_ex((host, port))` | Attempts to connect to a given port; returns 0 if open |
-| `socket.setdefaulttimeout(seconds)` | Sets a timeout for network operations |
+### 🧩 `platform`
+- Detects the operating system to determine correct command-line arguments for ping.
+
+### ⚙️ `subprocess`
+- Runs the `ping` command in the background and captures its output to check reachability.
+
+### 🌐 `socket`
+- Creates a TCP socket connection to test if specific ports are open or closed.  
+- Provides low-level network access without external libraries.
 
 ---
 
 ## 🧩 How It Works
-
-1. **User Input:** Enter the target hostname or IP.  
-2. **IP Resolution:** Converts hostname to IP using `socket.gethostbyname()`.  
-3. **Availability Check:** Tests if the target responds on common ports.  
-4. **Port Scan:** Iterates through popular TCP ports to detect open ones.  
+1. The user inputs a target **IP address**.  
+2. The script runs a **ping test** using `subprocess.run()` to see if the host is alive.  
+3. If the host is reachable, it proceeds to **scan common TCP ports** using the `socket` module.  
+4. The tool prints real-time port scan results for every tested service.  
 
 ---
 
 ## 💻 Example Usage
 
-Run the script:
+Run the script in your terminal:
 ```bash
 python ip_tracer.py
-[+] Target Host: example.com
-[+] IP Address: 93.184.216.34
-[✓] Host is Alive
-[+] Scanning Common Ports...
-[OPEN] 80 (HTTP)
-[CLOSED] 22 (SSH)
-[OPEN] 443 (HTTPS)
+
+output
+Enter the IP address to scan: 8.8.8.8
+
+✅ 8.8.8.8 is alive.
+
+🔍 Scanning common ports...
+
+✅ Port 80 (HTTP) is OPEN.
+❌ Port 22 (SSH) is CLOSED.
+✅ Port 443 (HTTPS) is OPEN.
+
+if it is offline
+Enter the IP address to scan: 10.10.10.10
+
+❌ 10.10.10.10 is not reachable.
+
+Host appears to be offline. Skipping port scan.
+
